@@ -58,7 +58,8 @@ module "instance_template" {
   subnetwork_project = local.project
   tags               = ["allow-iap-ssh", local.vcluster_name] # for IAP SSH access
 
-  machine_type = local.instance_type
+  machine_type         = local.instance_type
+  on_host_maintenance  = "TERMINATE"
 
   source_image         = data.google_compute_image.img.self_link
   source_image_family  = data.google_compute_image.img.family
