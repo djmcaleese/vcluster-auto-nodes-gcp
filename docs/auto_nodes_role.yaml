@@ -57,6 +57,7 @@ includedPermissions:
   - iam.roles.list
   - iam.roles.create
   - iam.roles.delete
+  - iam.roles.undelete
   - iam.roles.update
   - resourcemanager.projects.getIamPolicy
   - resourcemanager.projects.setIamPolicy
