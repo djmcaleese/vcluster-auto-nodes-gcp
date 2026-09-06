@@ -1,0 +1,33 @@
+# A NetworkEnvironment is the VPC, the subnets, the Cloud NAT, the firewall rules and the node
+# service account that this provider's instances are placed into. It is cluster scoped and shared:
+# every tenant cluster whose node claims bind to it gets its nodes in the same VPC.
+#
+# A NodeProvider that declares a networkEnvironmentTemplate places no nodes until at least one of
+# these exists for it. Names cannot contain dots.
+apiVersion: management.loft.sh/v1
+kind: NetworkEnvironment
+metadata:
+  name: gcp-compute-us-east1
+  annotations:
+    # Node claims of this provider that do not name an environment bind here. Exactly one
+    # environment per provider may carry this.
+    machines.vcluster.com/is-default-environment: "true"
+spec:
+  providerRef: gcp-compute
+  # Merged over the provider's properties, so an environment can pin the project and the region it
+  # is placed in - a second environment in europe-north2 would set region there and be selected per
+  # node claim with the vcluster.com/network-environment property.
+  properties:
+    vcluster.com/vpc-cidr: "10.10.0.0/16"
+---
+# A second environment on the same provider, in another region, with a non-overlapping CIDR so
+# tenant clusters can span both.
+apiVersion: management.loft.sh/v1
+kind: NetworkEnvironment
+metadata:
+  name: gcp-compute-europe-north2
+spec:
+  providerRef: gcp-compute
+  properties:
+    region: europe-north2
+    vcluster.com/vpc-cidr: "10.20.0.0/16"

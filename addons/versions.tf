@@ -7,7 +7,3 @@ terraform {
     }
   }
 }
-
-provider "kubernetes" {
-  config_path = var.vcluster.kubeConfig
-}

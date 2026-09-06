@@ -10,10 +10,6 @@ module "validation" {
   region  = nonsensitive(var.vcluster.properties["region"])
 }
 
-resource "random_id" "suffix" {
-  byte_length = 4
-}
-
 data "google_compute_zones" "available" {
   project = local.project
   region  = local.region
@@ -28,7 +24,7 @@ module "vpc" {
 
   project_id   = local.project
   network_name = format("vcluster-network-%s", local.random_id)
-  description  = format("Network for %s", local.vcluster_name)
+  description  = format("Network for %s", local.environment_name)
 
   subnets = [
     {

@@ -23,17 +23,19 @@ module "private_instance" {
   zone              = local.zone == "" ? null : local.zone
   subnetwork        = local.subnet_name
   num_instances     = 1
-  hostname          = "${var.vcluster.name}-${random_id.vm_suffix.hex}"
+  hostname          = "${local.vcluster_name}-${random_id.vm_suffix.hex}"
   instance_template = module.instance_template.self_link
 
   # Will use NAT
   access_config = []
 
+  # The network environment is shared between tenant clusters, so these are what tells the
+  # instances of one cluster apart from another's inside the same VPC. cluster-name has to match
+  # the --cluster-name flag of a CCM deployed into this tenant cluster (see ../addons).
   labels = {
     vcluster  = local.vcluster_name
     namespace = local.vcluster_namespace
 
-    # the same as the value set in CCM’s --cluster-name flag
     cluster-name = local.vcluster_name
   }
 }
